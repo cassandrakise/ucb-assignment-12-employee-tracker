@@ -1,6 +1,6 @@
 /*pulled from reference */
 
-SELECT employee.first_name, employee.last_name, employee.id, employee. AS employee
+SELECT employee.first_name, employee.last_name, department.department_name, roles.title, roles.salary,employee.role_id, employee.manager_id
 FROM employee
 LEFT JOIN roles
 ON employee.role_id=roles.id

@@ -137,9 +137,34 @@ function updateEmployeeRole() { // needs 3 queries, 1) get roles, 2) get employe
     }
     submission = submission.map((employee) => {
       return {
-        
+        name: employee.first_name && employee.last_name,
+        value: employee.id,
+      };
+    });
+    db.query(`SELECT * FROM roles`, (err, options => {
+    if (err) {
+      console.log(err);
+    }
+    options = options.map((roles) => {
+      return {
+        name: roles.title,
+        value: roles.id,
+      };
+    });
+    inquirer
+    .prompt([
+      {
+        name: 'id',
+        type: 'options',
+        choices: submission,
+      },
+      {
+        name: 'title',
+        type: 'options',
+        choices: submission,
       }
-    })
+    ])
+  })
   })
   const sql = `UPDATE role SET review = ? WHERE id = ?`; // needs to show user options to select which element to update, ie name, etc
   db.query(sql, (err, submission) => {

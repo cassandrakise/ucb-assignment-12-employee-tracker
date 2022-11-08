@@ -43,7 +43,7 @@ function questions() {
       } else if (answer.hr === 'Add Role') {
         addRole();
       } else if (answer.hr === 'View All Departments') {
-        viewAllDepartments();
+        displayAllDepartments();
       } else if (answer.hr === 'Add Department') {
         addDepartment();
       } else if (answer.hr === 'Quit') {
@@ -131,6 +131,16 @@ function addEmployee() {
 };
 
 function updateEmployeeRole() { // needs 3 queries, 1) get roles, 2) get employees, 3) change role 
+  db.query(`SELECT * from employee`, (err, submission) => {
+    if (err) {
+      console.log(err);
+    }
+    submission = submission.map((employee) => {
+      return {
+        
+      }
+    })
+  })
   const sql = `UPDATE role SET review = ? WHERE id = ?`; // needs to show user options to select which element to update, ie name, etc
   db.query(sql, (err, submission) => {
     if (err) {
@@ -142,8 +152,8 @@ function updateEmployeeRole() { // needs 3 queries, 1) get roles, 2) get employe
   });
 }
 
-function viewAllDepartments() { // view 
-  const sql = `SELECT id, department_id AS department FROM employee_db`
+function displayAllDepartments() { 
+  const sql = `SELECT id, department_name FROM department`;
 
   db.query(sql, (err, submission) => {
     if (err) {
@@ -152,21 +162,20 @@ function viewAllDepartments() { // view
     }
       console.table(submission)
       questions()
-
     });
 }
 
 
 function addDepartment() { 
  // 1 prompt before the query to get the department name
- const sql = `SELECT * from departments`;
- db.query(sql, (err, submission) => {
-   if (err); 
-     submission = submission.map((department) => {
-     return {
-       name: department_name,
-       value: department.id,
-     },
+ const sql = `SELECT * from department`;
+//  db.query(sql, (err, submission) => {
+//    if (err); 
+//      submission = submission.map((department) => {
+//      return {
+//        name: department_name,
+//        value: department.id,
+//      },
  inquirer
  .prompt([
    {
@@ -187,16 +196,11 @@ function addDepartment() {
           return;
         }
         console.table(submission)
-        questions()
-    })
-    // const department_name = data.department_name;
-    // const sql = `INSERT INTO department (department_name) SET ?`;
-    
-    // const params = [department_name];  
+      }
+      )
     });
-  });
-});
-}
+    questions()
+  }
 
 function quitHr() {
     process.exit() 

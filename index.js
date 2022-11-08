@@ -63,12 +63,12 @@ function displayAllEmployees() {
     ON manager.id =employee.manager_id
     ORDER BY department.id;`;
 
-    db.query(sql, (err, results) => {
+    db.query(sql, (err, submission) => {
       if (err) {
         console.log({ error: err.message })
         return;
       }
-        console.table(results)
+        console.table(submission)
       questions()
    });
 }
@@ -118,12 +118,12 @@ function addEmployee() {
           role_id: data.role_id,
           manager_id: data.manager_id,
         },
-        (err, results) => {
+        (err, submission) => {
           if (err) { 
             console.log({ error: err.message });
             return;
           }
-          console.table(results)
+          console.table(submission)
         questions()
     });
   });
@@ -132,12 +132,12 @@ function addEmployee() {
 
 function updateEmployeeRole() { // needs 3 queries, 1) get roles, 2) get employees, 3) change role 
   const sql = `UPDATE role SET review = ? WHERE id = ?`; // needs to show user options to select which element to update, ie name, etc
-  db.query(sql, (err, results) => {
+  db.query(sql, (err, submission) => {
     if (err) {
       console.log({ error: err.message })
       return;
     }
-      console.table(results)
+      console.table(submission)
     questions()
   });
 }
@@ -145,30 +145,57 @@ function updateEmployeeRole() { // needs 3 queries, 1) get roles, 2) get employe
 function viewAllDepartments() { // view 
   const sql = `SELECT id, department_id AS department FROM employee_db`
 
-  db.query(sql, (err, results) => {
+  db.query(sql, (err, submission) => {
     if (err) {
       console.log({ error: err.message })
       return;
     }
-      console.table(results)
+      console.table(submission)
       questions()
 
     });
 }
 
 
-function addDepartment() { // follow add employee structure
-  const sql = `INSERT INTO department (addDepartment) VALUES (?)`;
+function addDepartment() { 
  // 1 prompt before the query to get the department name
-  db.query(sql, (err, results) => {
-    if (err) {
-      console.log({ error: err.message })
-      return;
-    }
-      console.table(results)
-      questions()
-
+ const sql = `SELECT * from departments`;
+ db.query(sql, (err, submission) => {
+   if (err); 
+     submission = submission.map((department) => {
+     return {
+       name: department_name,
+       value: department.id,
+     },
+ inquirer
+ .prompt([
+   {
+     name: 'department_name',
+     type: 'input',
+     message: 'Please enter the new department.'
+    },
+  ])
+  .then((data) => {
+    db.query(
+      `INSERT INTO department SET ?`,
+      {
+        department_name: data.department_name,
+      },
+      (err, submission) => {
+        if (err) {
+          console.log({ error: err.message })
+          return;
+        }
+        console.table(submission)
+        questions()
+    })
+    // const department_name = data.department_name;
+    // const sql = `INSERT INTO department (department_name) SET ?`;
+    
+    // const params = [department_name];  
+    });
   });
+});
 }
 
 function quitHr() {

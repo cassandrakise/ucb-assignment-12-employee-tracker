@@ -123,7 +123,7 @@ function addEmployee() {
               console.log({ error: err.message });
               return;
             }
-            console.table(submission);
+            console.log("Employee added!");
             questions();
           }
         );
@@ -153,8 +153,7 @@ function updateEmployeeRole() {
     });
     db.query(
       `SELECT * FROM roles`,
-      (err,
-      (options) => {
+      (err, options) => {
         if (err) {
           console.log(err);
         }
@@ -167,47 +166,97 @@ function updateEmployeeRole() {
         inquirer
           .prompt([
             {
-              name: "id",
-              type: "options",
+              name: "employee_id",
+              type: "list",
               message: "What is your name?",
               choices: submission,
             },
             {
-              name: "title",
-              type: "options",
-              message: "What name should be on file?",
-              choices: list,
+              name: "role_id",
+              type: "list",
+              message: "What role should be on file?",
+              choices: options,
             },
           ])
           .then((data) => {
-            db.query(sql, (err, submission));
+            console.log(data)
+            db.query(
+              `UPDATE employee SET ? WHERE ?`,
+              [
+                {
+                  role_id: data.role_id,
+                },
+                {
+                  id: data.employee_id,
+                },
+
+              ],
+              function (err) {
+                if (err) {
+                  console.log(
+                    "No change to the selected employees role was made. Please resubmit if you would like to change the role of the employee."
+                  );
+                  console.log(err);
+                }
+              }
+            );
+            console.log("Selected role has been updated.");
+            questions();
           });
-      })
-    );
-    // const sql = `UPDATE role SET review = ? WHERE id = ?`; // needs to show user options to select which element to update, ie name, etc
-    db.query(
-      `UPDATE employee SET ? WHERE ?`,
-      [
-        {
-          id: data.id,
-        },
-        {
-          roles_id: data.title,
-        },
-      ],
-      function (err) {
-        if (err) {
-          console.log(
-            "No change to the selected employees role was made. Please resubmit if you would like to change the role of the employee."
-          );
-          console.log(err);
-        }
-      }
-    );
-    console.log("Selected role has been updated.");
-    questions();
+      });
   });
+    // const sql = `UPDATE role SET review = ? WHERE id = ?`; // needs to show user options to select which element to update, ie name, etc
 }
+
+function viewAllRoles() {
+  const sql = `SELECT id, title FROM roles`;
+  
+  db.query(sql, (err, submission) => {
+    if (err) {
+      console.log({ error: err.message });
+      return;
+    }
+    console.table(submission);
+    questions();
+  })
+};
+
+function addRole() {
+  const sql = `INSERT into roles SET ?`;
+  db.query(
+    `SELECT * FROM department`,
+    (err, options) => {
+      if (err) {
+        console.log(err);
+      }
+      const departments = options.map((department) => {
+        return {
+          name: department.department_name,
+          value: department.id,
+        };
+      });
+      inquirer
+      .prompt([
+        {
+          name: "roleTitle",
+          type: "input",
+          message: "Please provide a title of the new role",
+        },
+        {
+          name: "departmentId",
+          type: 'list',
+          choices: departments
+        }, // insert two more questions about role id and role salary
+      ]).then((data) => {
+          db.query(sql, data.roleName, (err, submission) => {
+          if (err) {
+          }
+        })
+    })
+  })
+}
+
+
 
 function displayAllDepartments() {
   const sql = `SELECT id, department_name FROM department`;

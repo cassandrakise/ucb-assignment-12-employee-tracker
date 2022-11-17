@@ -17,7 +17,7 @@ VALUES (123, "Sales Lead", 100000, 111),
 INSERT INTO employee (id, first_name, last_name, role_id, manager_id)
 VALUES (098, "Molly", "Garvens", 123, null),
         (987, "Tim", "Close", 234, 098),
-        (876, "Austin", "Close", 345, null),
+        (876, "Austin", "Close", 345, null)
         (765, "Patrice", "Kise", 456, 876),
         (654, "George", "Close", 567, null),
         (543, "Jerry", "Close", 678, 654),

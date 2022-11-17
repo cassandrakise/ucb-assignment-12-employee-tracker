@@ -74,7 +74,7 @@ function displayAllEmployees() {
 }
 
 function addEmployee() {
-  const sql = `SELECT * from roles`; // will need to mimic this to bring up info for update
+  const sql = `SELECT * from roles`;
   db.query(sql, (err, submission) => {
     if (err);
     submission = submission.map((role) => {
@@ -83,7 +83,7 @@ function addEmployee() {
         value: role.id,
       };
     });
-    inquirer // this as well to update selected info
+    inquirer 
       .prompt([
         {
           name: "first_name",
@@ -131,16 +131,8 @@ function addEmployee() {
   });
 }
 
-// returns error :
-// /Users/ckise/Desktop/CodingBootcamp/ucb-assignment-12-employee-tracker/index.js:184
-//           id: data.id,
-//               ^
-
-// ReferenceError: data is not defined
-//     at Query.onResult (/Users/ckise/Desktop/CodingBootcamp/ucb-assignment-12-employee-tracker/index.js:184:15) 
-
 function updateEmployeeRole() {
-  // needs 3 queries, 1) get roles, 2) get employees, 3) change role
+
   db.query(`SELECT * from employee`, (err, submission) => {
     if (err) {
       console.log(err);
@@ -205,7 +197,6 @@ function updateEmployeeRole() {
           });
       });
   });
-    // const sql = `UPDATE role SET review = ? WHERE id = ?`; // needs to show user options to select which element to update, ie name, etc
 }
 
 function viewAllRoles() {
@@ -221,6 +212,7 @@ function viewAllRoles() {
   })
 };
 
+// only function that needs to be fixed for submission
 function addRole() {
   const sql = `INSERT into roles SET ?`;
   db.query(
@@ -272,15 +264,7 @@ function displayAllDepartments() {
 }
 
 function addDepartment() {
-  // 1 prompt before the query to get the department name
   const sql = `SELECT * from department`;
-  //  db.query(sql, (err, submission) => {
-  //    if (err);
-  //      submission = submission.map((department) => {
-  //      return {
-  //        name: department_name,
-  //        value: department.id,
-  //      },
   inquirer
     .prompt([
       {

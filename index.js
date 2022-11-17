@@ -238,17 +238,38 @@ function addRole() {
           name: "departmentId",
           type: 'list',
           choices: departments
-        }, // insert two more questions about role id and role salary
+        }, 
+        {
+          name: "roleId",
+          type: "input",
+          message: "Please provide ID number for this role."
+        },
+        {
+          name: "salaryInfo",
+          type: "input",
+          message: "Please input the salary of this role.",
+        },
       ]).then((data) => {
-          db.query(sql, data.roleName, (err, submission) => {
-          if (err) {
+        db.query(
+          `INSERT INTO roles SET ?`,
+          {
+            title: data.roleTitle,
+            department_id: data.departmentId,
+            id: data.roleId,
+            salary: data.salaryInfo,
+          },
+          (err) => {
+            if (err) {
+              console.log({ error: err.message });
+              return;
+            }
+            console.log("New role added.");
+            questions();
           }
-        })
+        );
     })
   })
 }
-
-
 
 function displayAllDepartments() {
   const sql = `SELECT id, department_name FROM department`;
